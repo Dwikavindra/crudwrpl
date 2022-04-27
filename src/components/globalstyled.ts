@@ -11,6 +11,7 @@ export const NavBar = styled.div`
   z-index: 2;
 `;
 
+
 export const HeaderContent = styled.div`
   display: flex;
   width: 35px;
