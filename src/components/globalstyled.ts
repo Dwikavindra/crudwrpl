@@ -19,7 +19,6 @@ export const HeaderContent = styled.div`
   height: 32.81px;
   margin-top: 34.69px;
   margin-bottom: 20px;
-
 `;
 
 export const HeaderLogoWrapper = styled.div`
@@ -34,5 +33,5 @@ export const HeaderAddProductButtonWrapper = styled.div`
   display: flex;
   margin-left: auto;
   margin-right: 20px;
-
+  cursor: pointer;
 `;
