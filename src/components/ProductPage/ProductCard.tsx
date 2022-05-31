@@ -6,8 +6,17 @@ type ProductCardProps = {
   productId: string | null;
   productName: string | null;
   productPrice: string | null;
+  productImageUrl: string | null;
 };
+
 export default function ProductCard(props: ProductCardProps) {
+  const returnImageUrl = (imageUrl: string | null): string => {
+    if (imageUrl === null) {
+      return "/placeholder.png";
+    } else {
+      return imageUrl as string;
+    }
+  };
   return (
     <CardBox
       onClick={() => {
@@ -17,7 +26,7 @@ export default function ProductCard(props: ProductCardProps) {
       <CardImage>
         <Image
           alt="/placeholder.png"
-          src={"/placeholder.png"}
+          src={returnImageUrl(props.productImageUrl)}
           width="100%"
           height="100%"
           layout="fill"

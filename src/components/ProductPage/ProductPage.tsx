@@ -39,6 +39,7 @@ export default function ProductPage(props: HomeProp) {
               productId={product.productID}
               productName={product.name}
               productPrice={product.cost}
+              productImageUrl={product.imageUrl}
             ></ProductCard>
           );
         })}

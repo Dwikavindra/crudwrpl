@@ -4,6 +4,14 @@ import { prisma } from "../../../lib/prisma";
 import { useState } from "react";
 import Image from "next/image";
 import Router from "next/router";
+import { storage } from "../../../src/firebase/firebase";
+import {
+  getDownloadURL,
+  ref,
+  StorageReference,
+  uploadBytes,
+} from "firebase/storage";
+import { alertTitleClasses } from "@mui/material";
 
 export async function getServerSideProps(context: any) {
   const { id } = context.params;
@@ -21,9 +29,11 @@ export default function Update(props: any) {
     name: props.product.name,
     cost: props.product.cost,
     description: props.product.description,
+    imageUrl: "",
   });
   const [isOpen, setIsOpen] = useState(false);
-  const [image, setImage] = useState<string>("/placeholder.png");
+  const [imageString, setImageString] = useState<string>("/placeholder.png");
+  const [imageFile, setImageFile] = useState<File>();
 
   const cancelHandler = () => {
     setTimeout(() => {
@@ -32,30 +42,52 @@ export default function Update(props: any) {
   };
   const submitImageLocally = (file: any) => {
     if (file.target.files && file.target.files[0]) {
-      setImage(URL.createObjectURL(file.target.files[0]));
+      setImageFile(file.target.files[0]);
+      setImageString(URL.createObjectURL(file.target.files[0]));
     }
   };
   const submitToDB = async (data: any) => {
-    try {
-      fetch("http://localhost:3000/api/product/updateProduct", {
+    const result = await fetch(
+      "http://localhost:3000/api/product/updateProduct",
+      {
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
         },
         method: "POST",
-      });
-    } catch (e) {
-      console.log(e);
-    }
+      }
+    );
+    let finalresult = await result.json();
+    console.log(result);
+    console.log(finalresult);
   };
 
-  const submitHandler = (e: any) => {
+  const submitImageToFirebaseStorage = async (): Promise<StorageReference> => {
+    const imageRef = ref(
+      storage,
+      `images/${imageFile!.name + props.product.productID}`
+    );
+    await uploadBytes(imageRef, imageFile!).then();
+    alert("File Uploaded");
+    return imageRef;
+  };
+  const submitHandler = async (e: any) => {
     try {
       e.preventDefault();
-      submitToDB(product);
+      const getReference = await submitImageToFirebaseStorage();
+      getDownloadURL(getReference).then((url) => {
+        const newproducts = { ...product, imageUrl: url };
+        submitToDB(newproducts);
+      });
       setIsOpen(true);
       setTimeout(() => {
-        setProduct({ productID: "", name: "", cost: "", description: "" });
+        setProduct({
+          productID: "",
+          name: "",
+          cost: "",
+          description: "",
+          imageUrl: "",
+        });
         setIsOpen(false);
         Router.push("/");
       }, 3000);
@@ -87,7 +119,7 @@ export default function Update(props: any) {
         <div className=" flex border-2 border-black justify-items-center justify-center align-middle lg:w-60 lg:h-60">
           <div className="min-w-full">
             <Image
-              src={image as string}
+              src={imageString}
               alt="img-template"
               width="100%"
               height="100%"

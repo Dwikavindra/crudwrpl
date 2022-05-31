@@ -46,10 +46,17 @@ model product {
   description String? @db.VarChar(255)
   stock       Int?
   cost        String? @db.VarChar(15)
+  imageUrl    String? @db.VarChar(500)
 }
 
 model transaction {
   id      Int     @id
   details String? @db.VarChar(255)
   date    String? @db.VarChar(255)
+}
+
+model Cart {
+  cartID        Int    @id @default(autoincrement())
+  customerEmail String @db.VarChar(255)
+  productID     String @unique
 }
