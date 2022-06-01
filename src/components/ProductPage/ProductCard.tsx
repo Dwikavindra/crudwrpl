@@ -11,8 +11,10 @@ type ProductCardProps = {
 export default function ProductCard(props: ProductCardProps) {
   const returnImageUrl = (imageUrl: string | null): string => {
     if (imageUrl === null) {
+      console.log("Hello world");
       return "/placeholder.png";
     } else {
+      console.log("Hi");
       return imageUrl as string;
     }
   };

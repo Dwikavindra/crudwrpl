@@ -1,17 +1,9 @@
 import Header from "../../../src/components/Header/Header";
-import { product } from "@prisma/client";
 import { prisma } from "../../../lib/prisma";
 import { useState } from "react";
 import Image from "next/image";
 import Router from "next/router";
-import { storage, submitProduct } from "../../../src/firebase/firebase";
-import {
-  getDownloadURL,
-  ref,
-  StorageReference,
-  uploadBytes,
-} from "firebase/storage";
-import { alertTitleClasses } from "@mui/material";
+import { submitProduct } from "../../../src/firebase/firebase";
 import { updateProductToDB } from "../../../src/database/updateDB";
 import Head from "next/head";
 

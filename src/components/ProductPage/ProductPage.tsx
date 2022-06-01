@@ -70,7 +70,7 @@ export default function ProductPage(props: HomeProp) {
                 productId={product.productID}
                 productName={product.name}
                 productPrice={product.cost}
-                productImageUrl={null}
+                productImageUrl={product.imageUrl}
               />
             );
           })}
