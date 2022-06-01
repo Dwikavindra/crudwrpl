@@ -11,6 +11,7 @@ model Customer {
   email           String  @id @db.VarChar(500)
   name            String? @db.Char(40)
   profile_picture String? @db.VarChar(500)
+  Cart            Cart[]
 }
 
 model Seller {
@@ -47,6 +48,7 @@ model product {
   stock       Int?
   cost        String? @db.VarChar(15)
   imageUrl    String? @db.VarChar(500)
+  Cart        Cart[]
 }
 
 model transaction {
@@ -56,7 +58,12 @@ model transaction {
 }
 
 model Cart {
-  cartID        Int    @id @default(autoincrement())
-  customerEmail String @db.VarChar(255)
-  productID     String @unique
+  cartID    Int      @id @default(autoincrement())
+  email     String   @db.VarChar(500)
+  productID String   @db.VarChar(255)
+  Customer  Customer @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "FK_email")
+  product   product  @relation(fields: [productID], references: [productID], onDelete: NoAction, onUpdate: NoAction, map: "FK_productID")
+
+  @@index([email], map: "FK_email")
+  @@index([productID], map: "FK_productID")
 }

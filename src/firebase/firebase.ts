@@ -6,7 +6,10 @@ import {
   ref,
   StorageReference,
   uploadBytes,
+  getDownloadURL,
 } from "firebase/storage";
+import { product } from "@prisma/client";
+import { Product } from "../../pages/product/edit/[id]";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -25,11 +28,20 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const storage = getStorage(app);
-export const submitImageToFirebaseStorage = async (
+export const submitProduct = async (
   imageFile: File,
-  productID: number
-): Promise<StorageReference> => {
-  const imageRef = ref(storage, `images/${imageFile!.name + productID}`);
-  await uploadBytes(imageRef, imageFile!).then();
-  return imageRef;
+  productObject: Product,
+  submitToDB: Function // For DB related action
+) => {
+  const imageRef = ref(
+    storage,
+    `images/${imageFile!.name + productObject.productID}`
+  );
+  await uploadBytes(imageRef, imageFile!).then(() => {
+    getDownloadURL(imageRef).then((url) => {
+      const newproducts = { ...productObject, imageUrl: url };
+      console.log(newproducts);
+      submitToDB(newproducts);
+    });
+  });
 };

@@ -4,16 +4,16 @@ import { uid } from "uid";
 import Header from "../src/components/Header/Header";
 import Router from "next/router";
 import Image from "next/image";
-
-interface Product {
-  name: string;
-  cost: string;
-  description: string;
-  productID: string;
-}
+import { Product } from "../src/helper/types";
 
 export default function AddProduct() {
-  const [product, setProduct] = useState<Product>({ productID: "", name: "", cost: "", description: "" });
+  const [product, setProduct] = useState<Product>({
+    productID: "",
+    name: "",
+    cost: "",
+    description: "",
+    imageUrl: "",
+  });
   const [isOpen, setIsOpen] = useState(false);
 
   const submitToDB = async (data: Product) => {
@@ -31,11 +31,22 @@ export default function AddProduct() {
   };
 
   const submitHandler = (e: any) => {
-    if (product.cost === "" || product.name === "" || product.description === "") return;
+    if (
+      product.cost === "" ||
+      product.name === "" ||
+      product.description === ""
+    )
+      return;
     try {
       e.preventDefault();
       submitToDB(product);
-      setProduct({ productID: "", name: "", cost: "", description: "" });
+      setProduct({
+        productID: "",
+        name: "",
+        cost: "",
+        description: "",
+        imageUrl: "",
+      });
       setIsOpen(true);
       setTimeout(() => {
         setIsOpen(false);
@@ -46,34 +57,69 @@ export default function AddProduct() {
     }
   };
   const cancelHandler = () => {
-    setProduct({ productID: "", name: "", cost: "", description: "" });
+    setProduct({
+      productID: "",
+      name: "",
+      cost: "",
+      description: "",
+      imageUrl: "",
+    });
     setTimeout(() => {
       Router.push("/");
-    }, 100);
+    }, 3000);
   };
   return (
     <>
       <Header />
-      {isOpen && 
-      <div className={`absolute select-none bg-black bg-opacity-30 z-40 w-screen h-screen`}>
-        <div className={`fixed mx-auto top-32 right-0 left-0 font-semibold flex flex-col justify-center items-center w-[20%] h-24 bg-custom-darkBlue text-custom-lightGrey rounded-md select-none gap-y-3`}>
-          <p className="text-2xl">Product Added!</p>
-          <p className="">Redirecting to main page</p>
+      {isOpen && (
+        <div
+          className={`absolute select-none bg-black bg-opacity-30 z-40 w-screen h-screen`}
+        >
+          <div
+            className={`fixed mx-auto top-32 right-0 left-0 font-semibold flex flex-col justify-center items-center w-[20%] h-24 bg-custom-darkBlue text-custom-lightGrey rounded-md select-none gap-y-3`}
+          >
+            <p className="text-2xl">Product Added!</p>
+            <p className="">Redirecting to main page</p>
+          </div>
         </div>
-      </div>
-      }
+      )}
       <div className="pt-36 text-center font-semibold text-lg md:text-xl lg:text-2xl">
         <h1>Add New Product</h1>
       </div>
       <div className="flex flex-col lg:flex-row mt-3 lg:mt-7 gap-x-24 lg:justify-around mx-auto w-[85vw] lg:w-[65vw] lg:h-[65vh]">
         <div className="w-full  lg:w-1/2 grid grid-cols-2 p-7 lg:p-5 gap-4">
-          <Image src={"/placeholder.png"} alt="img-template" width="100%" height="100%" />
-          <Image src={"/placeholder.png"} alt="img-template" width="100%" height="100%" />
-          <Image src={"/placeholder.png"} alt="img-template" width="100%" height="100%" />
-          <Image src={"/placeholder.png"} alt="img-template" width="100%" height="100%" />
+          <Image
+            src={"/placeholder.png"}
+            alt="img-template"
+            width="100%"
+            height="100%"
+          />
+          <Image
+            src={"/placeholder.png"}
+            alt="img-template"
+            width="100%"
+            height="100%"
+          />
+          <Image
+            src={"/placeholder.png"}
+            alt="img-template"
+            width="100%"
+            height="100%"
+          />
+          <Image
+            src={"/placeholder.png"}
+            alt="img-template"
+            width="100%"
+            height="100%"
+          />
         </div>
         <div className="w-full  lg:w-1/2">
-          <form onSubmit={submitHandler} spellCheck={false} autoComplete="off" className="w-full h-full lg:mt-20 mx-auto">
+          <form
+            onSubmit={submitHandler}
+            spellCheck={false}
+            autoComplete="off"
+            className="w-full h-full lg:mt-20 mx-auto"
+          >
             <div className="flex flex-col gap-y-2 mb-5">
               <label htmlFor="productName" className="lg:text-xl font-semibold">
                 Name
@@ -84,8 +130,10 @@ export default function AddProduct() {
                 type="text"
                 name="productName"
                 id="productName"
-                value={product.name}
-                onChange={(e) => setProduct({ ...product, name: e.target.value })}
+                value={product.name as string}
+                onChange={(e) =>
+                  setProduct({ ...product, name: e.target.value })
+                }
                 maxLength={14}
                 required
               />
@@ -100,8 +148,10 @@ export default function AddProduct() {
                 type="text"
                 name="productCost"
                 id="productCost"
-                value={product.cost}
-                onChange={(e) => setProduct({ ...product, cost: e.target.value })}
+                value={product.cost as string}
+                onChange={(e) =>
+                  setProduct({ ...product, cost: e.target.value })
+                }
                 maxLength={15}
                 required
               />
@@ -116,8 +166,10 @@ export default function AddProduct() {
                 rows={2}
                 name="productDesc"
                 id="productDesc"
-                value={product.description}
-                onChange={(e) => setProduct({ ...product, description: e.target.value })}
+                value={product.description as string}
+                onChange={(e) =>
+                  setProduct({ ...product, description: e.target.value })
+                }
                 maxLength={16}
                 required
               />
@@ -132,7 +184,11 @@ export default function AddProduct() {
               >
                 Add Product
               </button>
-              <button className="bg-custom-darkOrange hover:bg-[#d45133] font-semibold transition text-white px-4 py-2 rounded" type="reset" onClick={cancelHandler}>
+              <button
+                className="bg-custom-darkOrange hover:bg-[#d45133] font-semibold transition text-white px-4 py-2 rounded"
+                type="reset"
+                onClick={cancelHandler}
+              >
                 Cancel
               </button>
             </div>

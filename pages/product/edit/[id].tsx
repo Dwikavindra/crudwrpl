@@ -4,7 +4,7 @@ import { prisma } from "../../../lib/prisma";
 import { useState } from "react";
 import Image from "next/image";
 import Router from "next/router";
-import { storage } from "../../../src/firebase/firebase";
+import { storage, submitProduct } from "../../../src/firebase/firebase";
 import {
   getDownloadURL,
   ref,
@@ -12,6 +12,7 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { alertTitleClasses } from "@mui/material";
+import { updateProductToDB } from "../../../src/database/updateDB";
 
 export async function getServerSideProps(context: any) {
   const { id } = context.params;
@@ -22,6 +23,14 @@ export async function getServerSideProps(context: any) {
   });
   return { props: { product } };
 }
+
+export type Product = {
+  productID: String;
+  name: String;
+  cost: String;
+  description: String;
+  imageUrl: String;
+};
 
 export default function Update(props: any) {
   const [product, setProduct] = useState({
@@ -46,40 +55,12 @@ export default function Update(props: any) {
       setImageString(URL.createObjectURL(file.target.files[0]));
     }
   };
-  const submitToDB = async (data: any) => {
-    const result = await fetch(
-      "http://localhost:3000/api/product/updateProduct",
-      {
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      }
-    );
-    let finalresult = await result.json();
-    console.log(result);
-    console.log(finalresult);
-  };
 
-  const submitImageToFirebaseStorage = async (): Promise<StorageReference> => {
-    const imageRef = ref(
-      storage,
-      `images/${imageFile!.name + props.product.productID}`
-    );
-    await uploadBytes(imageRef, imageFile!).then();
-    alert("File Uploaded");
-    return imageRef;
-  };
   const submitHandler = async (e: any) => {
     try {
       e.preventDefault();
-      const getReference = await submitImageToFirebaseStorage();
-      getDownloadURL(getReference).then((url) => {
-        const newproducts = { ...product, imageUrl: url };
-        submitToDB(newproducts);
-      });
       setIsOpen(true);
+      await submitProduct(imageFile!, product, updateProductToDB);
       setTimeout(() => {
         setProduct({
           productID: "",
@@ -202,6 +183,7 @@ export default function Update(props: any) {
               <button
                 className="bg-custom-lightOrange hover:bg-[#e2910f] font-semibold transition text-white px-3 py-2 rounded"
                 type="submit"
+                disabled={isOpen ? true : false}
               >
                 Update
               </button>
@@ -209,6 +191,7 @@ export default function Update(props: any) {
                 className="bg-custom-darkOrange hover:bg-[#d45133] font-semibold transition text-white px-4 py-2 rounded"
                 type="reset"
                 onClick={cancelHandler}
+                disabled={false}
               >
                 Cancel
               </button>
