@@ -15,8 +15,11 @@ import { prisma } from "../../../lib/prisma";
 //     res.status(400).json({ message: "Something went wrong" });
 //   }
 // };
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { name, cost, description, productID } = req.body;
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const { name, cost, description, productID, imageUrl } = req.body;
 
   try {
     await prisma.product.create({
@@ -25,10 +28,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         name,
         description,
         cost,
+        imageUrl,
       },
     });
     res.status(200).json({ message: "succesfuly created" });
   } catch (e) {
+    console.log(imageUrl);
     console.log(e);
   }
 }

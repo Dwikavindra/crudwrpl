@@ -1,6 +1,6 @@
-import { Product } from "../../pages/product/edit/[id]";
+import { Product } from "../../src/helper/types";
 
-export const submitToDB = async (data: Product) => {
+export const addProductToDB = async (data: Product) => {
   try {
     fetch("http://localhost:3000/api/product/addproduct", {
       body: JSON.stringify(data),

@@ -8,10 +8,11 @@ datasource db {
 }
 
 model Customer {
-  email           String  @id @db.VarChar(500)
-  name            String? @db.Char(40)
-  profile_picture String? @db.VarChar(500)
+  email           String    @id @db.VarChar(500)
+  name            String?   @db.Char(40)
+  profile_picture String?   @db.VarChar(500)
   Cart            Cart[]
+  product         product[]
 }
 
 model Seller {
@@ -42,13 +43,17 @@ model orders {
 }
 
 model product {
-  productID   String  @id @db.VarChar(255)
-  name        String? @db.VarChar(14)
-  description String? @db.VarChar(255)
+  productID   String    @id @db.VarChar(255)
+  name        String?   @db.VarChar(14)
+  description String?   @db.VarChar(255)
   stock       Int?
-  cost        String? @db.VarChar(15)
-  imageUrl    String? @db.VarChar(500)
+  cost        String?   @db.VarChar(15)
+  imageUrl    String?   @db.VarChar(500)
+  email       String?   @db.VarChar(500)
+  Customer    Customer? @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "FK_email2")
   Cart        Cart[]
+
+  @@index([email], map: "FK_email2")
 }
 
 model transaction {
@@ -61,6 +66,7 @@ model Cart {
   cartID    Int      @id @default(autoincrement())
   email     String   @db.VarChar(500)
   productID String   @db.VarChar(255)
+  quantity  Int
   Customer  Customer @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction, map: "FK_email")
   product   product  @relation(fields: [productID], references: [productID], onDelete: NoAction, onUpdate: NoAction, map: "FK_productID")
 
