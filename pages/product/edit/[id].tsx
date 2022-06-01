@@ -13,6 +13,7 @@ import {
 } from "firebase/storage";
 import { alertTitleClasses } from "@mui/material";
 import { updateProductToDB } from "../../../src/database/updateDB";
+import Head from "next/head";
 
 export async function getServerSideProps(context: any) {
   const { id } = context.params;
@@ -77,9 +78,11 @@ export default function Update(props: any) {
     }
   };
 
-  // console.log(props.product)
   return (
-    <div>
+    <>
+      <Head>
+        <title>{product.name} | Edit</title>{" "}
+      </Head>
       <Header />
       {isOpen && (
         <div
@@ -199,6 +202,6 @@ export default function Update(props: any) {
           </form>
         </div>
       </div>
-    </div>
+    </>
   );
 }

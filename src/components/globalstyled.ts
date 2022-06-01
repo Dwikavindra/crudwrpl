@@ -1,12 +1,27 @@
 import styled from "styled-components";
 
+export const NavBarContainer = styled.div`
+  position: fixed;
+  width: 100%;
+  z-index: 2;
+`;
+export const SearchBarContainer = styled.div`
+  width: 100%;
+  background: #eaeaea;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4rem;
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+`;
+
 export const NavBar = styled.div`
   justify-content: space-between;
   width: 100%;
   display: flex;
-  position: fixed;
   background: #16213b;
-  z-index: 2;
   padding: 1.2rem;
 `;
 
@@ -34,7 +49,6 @@ export const HeaderAddProductButtonWrapper = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 0rem 1.2rem;
   font-weight: 600;
   color: white;
   transition-property: all;

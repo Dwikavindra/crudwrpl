@@ -5,6 +5,8 @@ import AuthenticationPage from "../src/components/authPage/AuthenticationPage";
 import { prisma } from "../lib/prisma";
 import { useSession, getSession } from "next-auth/react";
 import Protected from "../src/components/Protected/Protected";
+import Head from "next/head";
+
 
 export async function getServerSideProps() {
   const product: product[] = await prisma.product.findMany();
@@ -21,6 +23,9 @@ export default function Home(props: HomeProp) {
   return (
     <>
       <Protected>
+       <Head>
+        <title>Home | Emart</title>
+      </Head>
         <Header />
         <ProductPage products={props.products}></ProductPage>
       </Protected>

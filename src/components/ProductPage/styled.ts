@@ -3,7 +3,6 @@ import styled from "styled-components";
 export const CardBox = styled.div`
   background-color: #e5e5e5;
   border: 1px solid #9b9b9b;
-  box-sizing: border-box;
   height: 280px;
   width: 200px;
   border-radius: 12.56px;
@@ -56,6 +55,6 @@ export const ProductGridDiv = styled.div`
   grid-row-gap: 50px;
   justify-items: center;
   align-content: space-evenly;
-  padding-top: 8rem;
+  padding-top: 0rem;
   padding-bottom: 2rem;
 `;

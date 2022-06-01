@@ -1,37 +1,9 @@
 import Header from "../../src/components/Header/Header";
-import { product } from "@prisma/client";
 import { prisma } from "../../lib/prisma";
 import { useState } from "react";
 import Image from "next/image";
 import Router from "next/router";
-import Template from "../../public/placeholder.png";
-// import DeleteProduct from "../../src/components/deleteProduct";
-
-// export async function getStaticPaths() {
-//   const data: product[] = await prisma.product.findMany();
-//   const paths = data.map((product) => {
-//     return {
-//       params: { id: product.productID },
-//     };
-//   });
-//   return {
-//     paths: paths,
-//     fallback: false,
-//   };
-// }
-
-// export const getStaticProps = async (context: any) => {
-//   const id = context.params.id;
-//   const product = await prisma.product.findUnique({
-//     where: {
-//       productID: id,
-//     },
-//   });
-
-//   return {
-//     props: { product },
-//   };
-// };
+import Head from "next/head";
 
 export async function getServerSideProps(context: any) {
   const { id } = context.params;
@@ -47,6 +19,8 @@ export default function Detail(props: any) {
   const [product, setProduct] = useState({ productID: props.product.productID, name: props.product.name, cost: props.product.cost, description: props.product.description });
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenToast, setIsOpenToast] = useState(false);
+
+  // console.log(props);
 
   const editHandler = () => {
     Router.push("/product/edit/" + props.product.productID);
@@ -68,9 +42,11 @@ export default function Detail(props: any) {
       Router.push("/");
     }, 3000);
   };
-  // console.log(props.product)
   return (
     <>
+      <Head>
+        <title>{product.name} | Detail Product</title>
+      </Head>
       <Header />
       {isOpenModal && <DeleteProduct product={product} handleClose={closeModalHandler} deleteHandler={deleteHandler} />}
       {isOpenToast && (
@@ -86,28 +62,28 @@ export default function Detail(props: any) {
       </div>
       <div className="flex flex-col lg:flex-row mt-3 lg:mt-8 lg:justify-center lg:h-[65vh]">
         <div className="w-full h-[37vh] lg:h-full lg:w-[40%] flex flex-col items-center justify-center gap-y-4 lg:gap-y-16">
-          <div className="relative w-full h-full lg:w-1/2 lg:h-1/2">
-            <Image src={"/placeholder.png"} alt="img-template" layout="fill" objectFit="contain" />
-          </div>
-          <div className="flex gap-x-2 lg:gap-x-0 w-[70%]">
-            <div className="relative w-1/3 h-[80px]">
-              <Image src={"/placeholder.png"} alt="img-template" layout="fill" objectFit="contain" />
-            </div>
-            <div className="relative w-1/3 h-[80px]">
-              <Image src={"/placeholder.png"} alt="img-template" layout="fill" objectFit="contain" />
-            </div>
-            <div className="relative w-1/3 h-[80px]">
-              <Image src={"/placeholder.png"} alt="img-template" layout="fill" objectFit="contain" />
-            </div>
+          <Image src={"/placeholder.png"} alt="img-template" width={160 * 2} height={153 * 2} objectFit="contain" />
+          <div className="flex gap-x-3 justify-center sm:justify-around w-[70%]">
+            <Image src={"/placeholder.png"} alt="img-template" width="80" height="76" />
+            <Image src={"/placeholder.png"} alt="img-template" width="80" height="76" />
+            <Image src={"/placeholder.png"} alt="img-template" width="80" height="76" />
           </div>
         </div>
         <div className="w-full lg:w-1/2 h-full flex flex-col gap-y-3 justify-between py-2 px-8 lg:px-0">
           <div className="space-y-3 mt-5">
             <p className="text-4xl lg:text-5xl font-bold text-custom-darkBlue">{product.name}</p>
             <p className="text-xl font-semibold">{product.cost}</p>
+            <p className="text-lg">{product.description}</p>
           </div>
-          <p className="text-lg">{product.description}</p>
-          <div className="flex lg:flex-col gap-x-5 lg:w-1/2 gap-y-4 mt-auto lg:mb-5 lg:text-xl">
+          <div className="flex justify-between">
+            <p className="font-medium text-2xl">Stock: {props.product.stock}</p>
+            <div className="flex gap-x-2 select-none">
+              <Image src={"/minus.svg"} width={30} height={30} alt="minus" />
+              <p className="text-lg font-medium">{props.product.stock}</p>
+              <Image src={"/plus.svg"} width={30} height={30} alt="minus" />
+            </div>
+          </div>
+          <div className="flex lg:flex-col gap-x-5 lg:w-[60%] gap-y-4 lg:mb-5 lg:text-xl lg:mx-auto">
             <button className="bg-custom-lightOrange hover:bg-[#e2910f] font-semibold transition text-white px-3 py-2 rounded-md" onClick={editHandler}>
               Edit Item
             </button>
